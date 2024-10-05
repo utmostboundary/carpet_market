@@ -3,7 +3,7 @@ from fastapi import FastAPI
 
 from dishka.integrations import fastapi as fastapi_integration
 
-from src.config import Config
+from src.entrypoint.config import Config
 from src.infrastructure.ioc import AppProvider
 
 config = Config()

@@ -10,7 +10,7 @@ services:
       - .:/carpet_market
     env_file: .env
     command: >
-      sh -c "uvicorn src.main:app --host 0.0.0.0 --port 8088"
+      sh -c "uvicorn src.entrypoint.main:app --host 0.0.0.0 --port 8088"
     depends_on:
       - db_postgres
     networks:
@@ -41,7 +41,7 @@ services:
         - static:/static/
       restart: always
       networks:
-        - app_network_test
+        - app_network
       links:
         - backend
       depends_on:

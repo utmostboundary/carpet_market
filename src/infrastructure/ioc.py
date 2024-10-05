@@ -1,6 +1,6 @@
 from dishka import Provider, from_context, Scope
 
-from src.config import Config
+from src.entrypoint.config import Config
 
 
 class AppProvider(Provider):

@@ -1,9 +1,11 @@
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from typing import AsyncGenerator, AsyncIterable
 
-from src.config import PostgresConfig
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession, AsyncEngine
+
+from src.entrypoint.config import PostgresConfig
 
 
-def new_session_maker(psql_config: PostgresConfig) -> async_sessionmaker[AsyncSession]:
+async def get_engine(psql_config: PostgresConfig) -> AsyncGenerator[AsyncEngine, None]:
     database_uri = 'postgresql+asyncpg://{login}:{password}@{host}:{port}/{database}'.format(
         login=psql_config.login,
         password=psql_config.password,
@@ -13,11 +15,27 @@ def new_session_maker(psql_config: PostgresConfig) -> async_sessionmaker[AsyncSe
     )
 
     engine = create_async_engine(
-        database_uri,
-        pool_size=20,
-        max_overflow=50,
-        connect_args={
-            "connect_timeout": 5,
-        },
+        database_uri
     )
-    return async_sessionmaker(engine, class_=AsyncSession, autoflush=False, expire_on_commit=False)
+
+    yield engine
+    await engine.dispose()
+
+
+async def get_async_sessionmaker(
+    engine: AsyncEngine,
+) -> async_sessionmaker[AsyncSession]:
+    session_factory = async_sessionmaker(
+        engine,
+        expire_on_commit=False,
+        class_=AsyncSession,
+    )
+    return session_factory
+
+
+async def get_async_session(
+    session_factory: async_sessionmaker[AsyncSession],
+) -> AsyncIterable[AsyncSession]:
+    async with session_factory() as session:
+        yield session
+
