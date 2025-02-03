@@ -11,14 +11,17 @@ from dishka import (
 )
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncConnection
 
-from src.application.operations.commands import AddCarpet
+from src.application.operations.commands.carpet.add_carpet import AddCarpet
 from src.application.operations.commands.pattern.create import CreatePattern
 from src.application.common.uow import UoWCommitter, UnitOfWork
+from src.application.operations.commands.pattern.edit import EditPattern
 from src.domain.common.uow_tracker import UoWTracker
+from src.domain.factories.pattern import PatternFactory
 from src.domain.models.carpet import Carpet
 from src.domain.models.pattern import Pattern
 from src.domain.repositories.carpet import CarpetRepository
 from src.domain.repositories.pattern import PatternRepository
+from src.infrastructure.factories.pattern import PatternFactoryImpl
 from src.infrastructure.persistence.data_mappers.carpet import CarpetMapperSAImpl
 from src.infrastructure.persistence.data_mappers.generic import GenericDataMapper
 from src.infrastructure.persistence.data_mappers.pattern import PatternMapperSAImpl
@@ -105,6 +108,10 @@ class InteractorsProvider(Provider):
         AddCarpet,
         scope=Scope.REQUEST,
     )
+    edit_pattern = provide(
+        EditPattern,
+        scope=Scope.REQUEST,
+    )
 
 
 class RepositoriesProvider(Provider):
@@ -118,6 +125,15 @@ class RepositoriesProvider(Provider):
         CarpetRepositorySAImpl,
         scope=Scope.REQUEST,
         provides=CarpetRepository,
+    )
+
+
+class FactoriesProvider(Provider):
+
+    pattern_factory = provide(
+        PatternFactoryImpl,
+        scope=Scope.REQUEST,
+        provides=PatternFactory,
     )
 
 
