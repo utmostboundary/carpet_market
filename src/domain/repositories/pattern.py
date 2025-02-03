@@ -2,15 +2,20 @@ from abc import abstractmethod
 from typing import Protocol
 from uuid import UUID
 
-from src.domain.models.pattern import Pattern
+from src.domain.models.pattern import Pattern, Region
 
 
 class PatternRepository(Protocol):
 
     @abstractmethod
-    def add(self, pattern: Pattern) -> None:
+    async def with_id(self, pattern_id: UUID) -> Pattern | None:
         raise NotImplementedError
 
     @abstractmethod
-    async def with_id(self, pattern_id: UUID) -> Pattern | None:
+    async def with_all_attributes(
+        self,
+        color: str,
+        pile_structure: str,
+        region: Region,
+    ):
         raise NotImplementedError

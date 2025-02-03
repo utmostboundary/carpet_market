@@ -19,16 +19,16 @@ class UnitOfWorkImpl(UnitOfWork):
         self._registry = registry
         self._connection = connection
 
-    def register_new(self, entity: DomainEntity):
+    def register_new(self, entity: DomainEntity) -> None:
         self._new.setdefault(type(entity), []).append(entity)
 
-    def register_dirty(self, entity: DomainEntity):
+    def register_dirty(self, entity: DomainEntity) -> None:
         self._dirty.setdefault(type(entity), []).append(entity)
 
-    def register_deleted(self, entity: DomainEntity):
+    def register_deleted(self, entity: DomainEntity) -> None:
         self._deleted.setdefault(type(entity), []).append(entity)
 
-    async def _flush(self):
+    async def _flush(self) -> None:
         for entity_type, data in self._new.items():
             mapper = self._registry.get(entity_type=entity_type)
             await mapper.save(entities=data)
@@ -41,7 +41,7 @@ class UnitOfWorkImpl(UnitOfWork):
             mapper = self._registry.get(entity_type=entity_type)
             await mapper.delete(entities=data)
 
-    async def commit(self):
+    async def commit(self) -> None:
         await self._flush()
         await self._connection.commit()
 

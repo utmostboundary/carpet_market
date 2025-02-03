@@ -28,3 +28,8 @@ class Price(BaseValueObject):
                 value=self.value,
                 text="Price cannot be lesser than 0",
             )
+
+    def __eq__(self, other: "Price") -> bool:
+        if self.value == other.value:
+            return True
+        return False

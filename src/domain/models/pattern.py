@@ -1,11 +1,17 @@
 from dataclasses import dataclass
+from enum import Enum
 
 from src.domain.models.base import UoWedEntity
 from src.domain.models.carpet import Carpet
-from src.domain.exceptions.pattern import CarpetWithThisSizeAlreadyExistsError
+from src.domain.exceptions.carpet import CarpetWithThisSizeAlreadyExistsError
 from src.domain.value_objects.price import Price
 from src.domain.value_objects.quantity import Quantity
 from src.domain.value_objects.size import Size
+
+
+class Region(Enum):
+    CHINA = "CHINA"
+    TIBET = "TIBET"
 
 
 @dataclass
@@ -14,6 +20,7 @@ class Pattern(UoWedEntity):
     description: str | None
     color: str
     pile_structure: str
+    region: Region
 
     def add_carpet(
         self,

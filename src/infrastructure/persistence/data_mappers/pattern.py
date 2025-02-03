@@ -21,11 +21,9 @@ class PatternMapperSAImpl(GenericDataMapper[Pattern]):
                 "title": entity.title,
                 "color": entity.color,
                 "pile_structure": entity.pile_structure,
-                "image_paths": entity.image_paths,
             }
             for entity in entities
         ]
-        print(f"==================DATA TO INSERT {data_to_insert}")
         query = insert(pattern_table)
         await self._connection.execute(query, data_to_insert)
 
@@ -37,7 +35,6 @@ class PatternMapperSAImpl(GenericDataMapper[Pattern]):
                 "description": entity.description,
                 "color": entity.color,
                 "pile_structure": entity.pile_structure,
-                "image_paths": entity.image_paths,
             }
             for entity in entities
         ]
@@ -48,7 +45,6 @@ class PatternMapperSAImpl(GenericDataMapper[Pattern]):
                 description=bindparam("description"),
                 color=bindparam("color"),
                 pile_structure=bindparam("pile_structure"),
-                image_paths=bindparam("image_paths"),
             )
             .where(pattern_table.c.id == bindparam("id"))
         )

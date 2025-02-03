@@ -5,7 +5,7 @@ from uuid import UUID
 from dishka.integrations.fastapi import inject, FromDishka
 from fastapi import APIRouter, HTTPException, Form, UploadFile, File
 
-from src.application.commands.add_carpet import AddCarpetCommand, AddCarpet
+from src.application.operations.commands import AddCarpetCommand, AddCarpet
 from src.application.common.input_data import FileMetadata
 from src.domain.exceptions.base import DomainError
 

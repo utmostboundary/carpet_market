@@ -43,9 +43,10 @@ def convert_to_pattern_entity(
     first_row = rows[0]
     pattern = Pattern(
         title=first_row["title"],
-        description=first_row["description"],
+        description=first_row.get("description", None),
         color=first_row["color"],
         pile_structure=first_row["pile_structure"],
+        region=first_row["region"],
         uow=uow,
     )
     return pattern

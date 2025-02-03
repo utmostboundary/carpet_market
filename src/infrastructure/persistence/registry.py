@@ -15,10 +15,10 @@ class Registry:
             Carpet: CarpetMapperSAImpl,
         }
 
-    def add_mapper(self, mapper: type[GenericDataMapper[DomainEntity]]):
+    def add_mapper(self, mapper: GenericDataMapper[DomainEntity]):
         self._mappers[type(mapper)] = mapper
 
-    def get(self, entity_type) -> type[GenericDataMapper[DomainEntity]]:
+    def get(self, entity_type) -> GenericDataMapper[DomainEntity]:
         try:
             key = self._keys[entity_type]
         except KeyError as e:

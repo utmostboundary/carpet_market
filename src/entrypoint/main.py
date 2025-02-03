@@ -11,7 +11,7 @@ def get_db_connection_string() -> ConnectionString:
     return os.environ.get("DB_CONNECTION_STRING")
 
 
-def create_fastapi_app():
+def create_fastapi_app() -> FastAPI:
     fastapi_app = FastAPI()
 
     db_connection_string = get_db_connection_string()

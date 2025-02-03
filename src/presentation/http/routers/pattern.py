@@ -1,7 +1,10 @@
 from dishka.integrations.fastapi import inject, FromDishka
 from fastapi import APIRouter, HTTPException
 
-from src.application.commands.create_pattern import CreatePatternCommand, CreatePattern
+from src.application.operations.commands.pattern.create import (
+    CreatePatternCommand,
+    CreatePattern,
+)
 from src.domain.exceptions.base import DomainError
 
 router = APIRouter(prefix="/patterns", tags=["Patterns"])
