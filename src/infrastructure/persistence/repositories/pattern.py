@@ -33,7 +33,7 @@ class PatternRepositorySAImpl(PatternRepository):
         color: str,
         pile_structure: str,
         region: Region,
-    ):
+    ) -> Pattern | None:
         stmt = select(
             pattern_table.c.id.label("id"),
             pattern_table.c.description.label("description"),

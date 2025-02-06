@@ -53,4 +53,5 @@ pattern_table = Table(
     Column("description", String),
     Column("color", String),
     Column("pile_structure", String),
+    Column("region", String),
 )

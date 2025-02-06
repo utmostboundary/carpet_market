@@ -55,8 +55,11 @@ class AddCarpet:
         image_paths = [
             file_path_creator(extension=image.extension) for image in command.images
         ]
-        carpet = await self._pattern_service.add_carpet(
-            pattern_id=pattern.id,
+        pattern_carpets = await self._carpet_repository.with_pattern_id(
+            pattern_id=pattern.id
+        )
+        new_carpet = pattern.add_carpet(
+            pattern_carpets=pattern_carpets,
             title=command.title,
             description=command.description,
             size=size,
@@ -67,4 +70,4 @@ class AddCarpet:
             image_paths=image_paths,
         )
         await self._committer.commit()
-        return carpet.id
+        return new_carpet.id

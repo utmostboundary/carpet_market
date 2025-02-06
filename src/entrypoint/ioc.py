@@ -9,7 +9,9 @@ from dishka import (
     from_context,
     AnyOf,
 )
+from dishka.integrations.fastapi import FastapiProvider
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncConnection
+from fastapi.requests import Request
 
 from src.application.operations.commands.carpet.add_carpet import AddCarpet
 from src.application.operations.commands.pattern.create import CreatePattern
@@ -21,6 +23,8 @@ from src.domain.models.carpet import Carpet
 from src.domain.models.pattern import Pattern
 from src.domain.repositories.carpet import CarpetRepository
 from src.domain.repositories.pattern import PatternRepository
+from src.domain.services.pattern import PatternService
+from src.infrastructure.auth.auth_token_gettable import AuthTokenGettable
 from src.infrastructure.factories.pattern import PatternFactoryImpl
 from src.infrastructure.persistence.data_mappers.carpet import CarpetMapperSAImpl
 from src.infrastructure.persistence.data_mappers.generic import GenericDataMapper
@@ -29,6 +33,7 @@ from src.infrastructure.persistence.registry import Registry
 from src.infrastructure.persistence.repositories.carpet import CarpetRepositorySAImpl
 from src.infrastructure.persistence.repositories.pattern import PatternRepositorySAImpl
 from src.infrastructure.persistence.uow import UnitOfWorkImpl
+from src.presentation.http.auth import FastAPIAuthTokenGettable
 
 type ConnectionString = str
 
@@ -46,10 +51,11 @@ class DatabaseProvider(Provider):
             pool_size=10,
             max_overflow=10,
         )
-
+        print(f"===========================CONNECTED")
         yield engine
 
         await engine.dispose()
+        print(f"===========================DISPOSED")
 
     @provide(scope=Scope.REQUEST)
     async def provide_connection(
@@ -137,6 +143,25 @@ class FactoriesProvider(Provider):
     )
 
 
+class ServicesProvider(Provider):
+
+    pattern_service = provide(
+        PatternService,
+        scope=Scope.REQUEST,
+    )
+
+
+class AuthProvider(Provider):
+
+    request = from_context(Request, scope=Scope.REQUEST)
+
+    http_token_gettable = provide(
+        FastAPIAuthTokenGettable,
+        scope=Scope.REQUEST,
+        provides=AuthTokenGettable,
+    )
+
+
 def setup_providers() -> list[Provider]:
     providers = [
         DatabaseProvider(),
@@ -144,12 +169,15 @@ def setup_providers() -> list[Provider]:
         DataMappersProvider(),
         InteractorsProvider(),
         RepositoriesProvider(),
+        FactoriesProvider(),
+        ServicesProvider(),
     ]
     return providers
 
 
-def setup_di(context: dict) -> AsyncContainer:
+def setup_fastapi_di(context: dict) -> AsyncContainer:
     providers = setup_providers()
+    providers.append(FastapiProvider())
 
     container = make_async_container(*providers, context=context)
     return container

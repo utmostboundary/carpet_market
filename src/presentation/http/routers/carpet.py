@@ -6,7 +6,10 @@ from dishka.integrations.fastapi import inject, FromDishka
 from fastapi import APIRouter, HTTPException, Form, UploadFile, File
 
 from src.application.common.input_data import FileMetadata
-from src.application.operations.commands.carpet.add_carpet import AddCarpet, AddCarpetCommand
+from src.application.operations.commands.carpet.add_carpet import (
+    AddCarpet,
+    AddCarpetCommand,
+)
 from src.domain.exceptions.base import DomainError
 
 router = APIRouter(prefix="/carpets", tags=["Carpets"])

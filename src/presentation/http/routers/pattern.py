@@ -7,7 +7,10 @@ from src.application.operations.commands.pattern.create import (
     CreatePatternCommand,
     CreatePattern,
 )
-from src.application.operations.commands.pattern.edit import EditPatternCommand, EditPattern
+from src.application.operations.commands.pattern.edit import (
+    EditPatternCommand,
+    EditPattern,
+)
 from src.domain.exceptions.base import DomainError
 from src.domain.exceptions.pattern import PatternDoesNotExistError
 
@@ -31,7 +34,9 @@ async def create_pattern(
 
 @router.patch("/{pattern_id/")
 @inject
-async def edit_pattern(pattern_id: UUID, command: EditPatternCommand, handler: FromDishka[EditPattern]):
+async def edit_pattern(
+    pattern_id: UUID, command: EditPatternCommand, handler: FromDishka[EditPattern]
+):
     try:
         result = await handler.execute(pattern_id=pattern_id, command=command)
     except PatternDoesNotExistError as e:

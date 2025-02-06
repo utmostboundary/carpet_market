@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from uuid import UUID
 
 from src.application.common.uow import UoWCommitter
-from src.domain.exceptions.pattern import PatternDoesNotExistError
+from src.domain.exceptions.pattern import PatternDoesNotExistError, PatternAlreadyExists
 from src.domain.models.pattern import Region
 from src.domain.repositories.pattern import PatternRepository
 from src.domain.services.pattern import PatternService
@@ -34,13 +34,20 @@ class EditPattern:
         if not pattern:
             raise PatternDoesNotExistError()
 
-        edited_pattern = await self._service.update(
-            pattern=pattern,
-            new_pattern_id=pattern_id,
+        duplicate_pattern = await self._repository.with_all_attributes(
+            color=command.color,
+            pile_structure=command.pile_structure,
+            region=command.region,
+        )
+        if duplicate_pattern and duplicate_pattern.id != pattern.id:
+            raise PatternAlreadyExists()
+
+        pattern.update(
             new_title=command.title,
             new_color=command.color,
             new_pile_structure=command.pile_structure,
             new_region=command.region,
             new_description=command.description,
         )
-        return edited_pattern.id
+
+        return pattern.id
