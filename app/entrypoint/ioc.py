@@ -13,10 +13,12 @@ from dishka.integrations.fastapi import FastapiProvider
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncConnection
 from fastapi.requests import Request
 
+from app.application.gateways.pattern import PatternGateway
 from app.application.operations.commands.carpet.add_carpet import AddCarpet
 from app.application.operations.commands.pattern.create import CreatePattern
 from app.application.common.uow import UoWCommitter, UnitOfWork
 from app.application.operations.commands.pattern.edit import EditPattern
+from app.application.operations.queries.pattern.get_by_id import GetPatternById
 from app.domain.common.uow_tracker import UoWTracker
 from app.domain.factories.pattern import PatternFactory
 from app.domain.models.carpet import Carpet
@@ -28,6 +30,7 @@ from app.infrastructure.factories.pattern import PatternFactoryImpl
 from app.infrastructure.persistence.data_mappers.carpet import CarpetMapperSAImpl
 from app.infrastructure.persistence.data_mappers.generic import GenericDataMapper
 from app.infrastructure.persistence.data_mappers.pattern import PatternMapperSAImpl
+from app.infrastructure.persistence.gateways.pattern import PatternGatewaySAImpl
 from app.infrastructure.persistence.registry import Registry
 from app.infrastructure.persistence.repositories.carpet import CarpetRepositorySAImpl
 from app.infrastructure.persistence.repositories.pattern import PatternRepositorySAImpl
@@ -103,7 +106,7 @@ class DataMappersProvider(Provider):
     )
 
 
-class InteractorsProvider(Provider):
+class CommandsProvider(Provider):
 
     create_pattern = provide(
         CreatePattern,
@@ -119,6 +122,14 @@ class InteractorsProvider(Provider):
     )
 
 
+class QueriesProvider(Provider):
+
+    get_pattern_by_id = provide(
+        GetPatternById,
+        scope=Scope.REQUEST,
+    )
+
+
 class RepositoriesProvider(Provider):
 
     pattern_repository = provide(
@@ -130,6 +141,15 @@ class RepositoriesProvider(Provider):
         CarpetRepositorySAImpl,
         scope=Scope.REQUEST,
         provides=CarpetRepository,
+    )
+
+
+class GatewaysProvider(Provider):
+
+    pattern_gateway = provide(
+        PatternGatewaySAImpl,
+        scope=Scope.REQUEST,
+        provides=PatternGateway,
     )
 
 
@@ -158,8 +178,10 @@ def setup_providers() -> list[Provider]:
         DatabaseProvider(),
         PersistenceProvider(),
         DataMappersProvider(),
-        InteractorsProvider(),
+        CommandsProvider(),
+        QueriesProvider(),
         RepositoriesProvider(),
+        GatewaysProvider(),
         FactoriesProvider(),
     ]
     return providers

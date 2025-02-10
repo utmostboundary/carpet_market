@@ -26,14 +26,14 @@ def test_price_validation(value: Decimal, exc_class) -> None:
         assert isinstance(price, Price)
 
 
-def test_prices_are_equal():
+def test_prices_are_equal() -> None:
     price1 = Price(value=Decimal("100"))
     price2 = Price(value=Decimal("100"))
 
     assert price1 == price2
 
 
-def test_prices_are_not_equal():
+def test_prices_are_not_equal() -> None:
     price1 = Price(value=Decimal("200"))
     price2 = Price(value=Decimal("100"))
 

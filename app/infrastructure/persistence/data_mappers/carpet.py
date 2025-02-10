@@ -28,7 +28,7 @@ class CarpetMapperSAImpl(GenericDataMapper[Carpet]):
             }
             for entity in entities
         ]
-        query = insert(carpet_table).returning(carpet_table.c.id)
+        query = insert(carpet_table)
         await self._connection.execute(query, data_to_insert)
 
     async def update(self, entities: Iterable[Carpet]) -> None:
