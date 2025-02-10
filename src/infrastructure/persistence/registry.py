@@ -18,7 +18,9 @@ class Registry:
     def add_mapper(self, mapper: GenericDataMapper[DomainEntity]):
         self._mappers[type(mapper)] = mapper
 
-    def get(self, entity_type) -> GenericDataMapper[DomainEntity]:
+    def get[
+        EntityT: DomainEntity
+    ](self, entity_type: EntityT) -> GenericDataMapper[DomainEntity]:
         try:
             key = self._keys[entity_type]
         except KeyError as e:

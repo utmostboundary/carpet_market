@@ -1,7 +1,7 @@
 from abc import abstractmethod
 from typing import Protocol
 
-from src.domain.models.pattern import Region
+from src.domain.models.pattern import Region, Pattern
 
 
 class PatternFactory(Protocol):
@@ -14,4 +14,4 @@ class PatternFactory(Protocol):
         pile_structure: str,
         region: Region,
         description: str | None = None,
-    ): ...
+    ) -> Pattern: ...

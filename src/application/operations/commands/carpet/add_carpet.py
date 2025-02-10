@@ -8,7 +8,6 @@ from src.application.common.uow import UoWCommitter
 from src.domain.exceptions.pattern import PatternDoesNotExistError
 from src.domain.repositories.carpet import CarpetRepository
 from src.domain.repositories.pattern import PatternRepository
-from src.domain.services.pattern import PatternService
 from src.domain.value_objects.price import Price
 from src.domain.value_objects.quantity import Quantity
 from src.domain.value_objects.size import Size
@@ -34,12 +33,10 @@ class AddCarpet:
         self,
         pattern_repository: PatternRepository,
         carpet_repository: CarpetRepository,
-        pattern_service: PatternService,
         committer: UoWCommitter,
     ):
         self._pattern_repository = pattern_repository
         self._carpet_repository = carpet_repository
-        self._pattern_service = pattern_service
         self._committer = committer
 
     async def execute(self, command: AddCarpetCommand) -> UUID:

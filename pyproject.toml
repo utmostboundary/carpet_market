@@ -17,6 +17,7 @@ uvicorn = "^0.32.1"
 asyncpg = "^0.30.0"
 python-multipart = "^0.0.20"
 boto3 = "^1.36.2"
+python-jose = "^3.3.0"
 
 
 [build-system]

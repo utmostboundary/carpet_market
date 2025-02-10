@@ -22,7 +22,7 @@ class PatternFactoryImpl(PatternFactory):
         pile_structure: str,
         region: Region,
         description: str | None = None,
-    ):
+    ) -> Pattern:
         if await self._repository.with_all_attributes(
             color=color,
             pile_structure=pile_structure,

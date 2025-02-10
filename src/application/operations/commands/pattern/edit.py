@@ -5,7 +5,6 @@ from src.application.common.uow import UoWCommitter
 from src.domain.exceptions.pattern import PatternDoesNotExistError, PatternAlreadyExists
 from src.domain.models.pattern import Region
 from src.domain.repositories.pattern import PatternRepository
-from src.domain.services.pattern import PatternService
 
 
 @dataclass(frozen=True)
@@ -22,11 +21,9 @@ class EditPattern:
     def __init__(
         self,
         repository: PatternRepository,
-        service: PatternService,
         committer: UoWCommitter,
     ) -> None:
         self._repository = repository
-        self._service = service
         self._committer = committer
 
     async def execute(self, pattern_id: UUID, command: EditPatternCommand) -> UUID:

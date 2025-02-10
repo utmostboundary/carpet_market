@@ -23,7 +23,6 @@ from src.domain.models.carpet import Carpet
 from src.domain.models.pattern import Pattern
 from src.domain.repositories.carpet import CarpetRepository
 from src.domain.repositories.pattern import PatternRepository
-from src.domain.services.pattern import PatternService
 from src.infrastructure.auth.auth_token_gettable import AuthTokenGettable
 from src.infrastructure.factories.pattern import PatternFactoryImpl
 from src.infrastructure.persistence.data_mappers.carpet import CarpetMapperSAImpl
@@ -143,14 +142,6 @@ class FactoriesProvider(Provider):
     )
 
 
-class ServicesProvider(Provider):
-
-    pattern_service = provide(
-        PatternService,
-        scope=Scope.REQUEST,
-    )
-
-
 class AuthProvider(Provider):
 
     request = from_context(Request, scope=Scope.REQUEST)
@@ -170,7 +161,6 @@ def setup_providers() -> list[Provider]:
         InteractorsProvider(),
         RepositoriesProvider(),
         FactoriesProvider(),
-        ServicesProvider(),
     ]
     return providers
 
