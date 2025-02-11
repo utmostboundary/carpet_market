@@ -18,22 +18,20 @@ from app.domain.exceptions.pattern import PatternDoesNotExistError
 router = APIRouter(prefix="/patterns", tags=["Patterns"])
 
 
-@router.post(
-    "/",
-)
+@router.get("/{pattern_id}/")
 @inject
-async def create_pattern(
-    command: CreatePatternCommand,
-    handler: FromDishka[CreatePattern],
+async def get_pattern_by_id(
+    pattern_id: UUID,
+    handler: FromDishka[GetPatternById],
 ):
     try:
-        result = await handler.execute(command=command)
-    except DomainError as e:
-        raise HTTPException(status_code=400, detail=e.message)
-    return {"success": True, "id": result}
+        pattern_dto = await handler.execute(pattern_id=pattern_id)
+        return pattern_dto
+    except PatternDoesNotExistError:
+        raise HTTPException(status_code=404)
 
 
-@router.patch("/{pattern_id/")
+@router.patch("/{pattern_id}/")
 @inject
 async def edit_pattern(
     pattern_id: UUID,
@@ -50,11 +48,16 @@ async def edit_pattern(
     return {"success": True, "id": result}
 
 
-@router.get("/{pattern_id/")
+@router.post(
+    "/",
+)
 @inject
-async def get_pattern_by_id(pattern_id: UUID, handler: FromDishka[GetPatternById]):
+async def create_pattern(
+    command: CreatePatternCommand,
+    handler: FromDishka[CreatePattern],
+):
     try:
-        pattern_dto = handler.execute(pattern_id=pattern_id)
-        return pattern_dto
-    except PatternDoesNotExistError:
-        raise HTTPException(status_code=404)
+        result = await handler.execute(command=command)
+    except DomainError as e:
+        raise HTTPException(status_code=400, detail=e.message)
+    return {"success": True, "id": result}

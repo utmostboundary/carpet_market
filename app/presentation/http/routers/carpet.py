@@ -47,7 +47,8 @@ async def add_carpet(
                 ),
                 images=[
                     FileMetadata(
-                        payload=image.file, extension=image.filename.split(".")[-1]
+                        payload=image.file,
+                        extension=image.filename.split(".")[-1],
                     )
                     for image in images
                 ],

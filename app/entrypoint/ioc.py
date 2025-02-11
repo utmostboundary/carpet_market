@@ -53,11 +53,9 @@ class DatabaseProvider(Provider):
             pool_size=10,
             max_overflow=10,
         )
-        print(f"===========================CONNECTED")
         yield engine
 
         await engine.dispose()
-        print(f"===========================DISPOSED")
 
     @provide(scope=Scope.REQUEST)
     async def provide_connection(
@@ -124,10 +122,18 @@ class CommandsProvider(Provider):
 
 class QueriesProvider(Provider):
 
-    get_pattern_by_id = provide(
-        GetPatternById,
-        scope=Scope.REQUEST,
-    )
+    @provide(scope=Scope.REQUEST)
+    async def get_pattern_by_id(
+        self, pattern_gateway: PatternGateway
+    ) -> GetPatternById:
+        query_service = GetPatternById(pattern_gateway=pattern_gateway)
+        print(f"=====================QUERY SERVICE ID {id(query_service)}")
+        return query_service
+
+    # get_pattern_by_id = provide(
+    #     GetPatternById,
+    #     scope=Scope.REQUEST,
+    # )
 
 
 class RepositoriesProvider(Provider):
