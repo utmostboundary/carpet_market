@@ -15,6 +15,20 @@ services:
       - app_network
     restart: always
 
+  tg_bot:
+    container_name: tg_bot
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.back
+    env_file: .env
+    command: >
+      sh -c "PYTHONPATH=/carpet_market python app/entrypoint/bot.py"
+    depends_on:
+      - db_postgres
+    networks:
+      - app_network
+    restart: always
+
   db_postgres:
     container_name: db_postgres
     image: postgres:16.2-alpine

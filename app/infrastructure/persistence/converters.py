@@ -1,8 +1,10 @@
-from typing import Sequence, Mapping
+from typing import Sequence, Mapping, Optional
+
+from sqlalchemy import RowMapping
 
 from app.application.common.uow import UnitOfWork
 from app.domain.models.carpet import Carpet
-from app.domain.models.pattern import Pattern
+from app.domain.models.pattern import Pattern, Region
 from app.domain.value_objects.price import Price
 from app.domain.value_objects.quantity import Quantity
 from app.domain.value_objects.size import Size
@@ -34,19 +36,18 @@ def convert_to_many_carpet_entities(
 
 
 def convert_to_pattern_entity(
-    rows: Sequence[Mapping],
+    row: Optional[RowMapping],
     uow: UnitOfWork,
 ) -> Pattern | None:
-    if not rows:
+    if not row:
         return None
 
-    first_row = rows[0]
     pattern = Pattern(
-        title=first_row["title"],
-        description=first_row.get("description", None),
-        color=first_row["color"],
-        pile_structure=first_row["pile_structure"],
-        region=first_row["region"],
+        title=row["title"],
+        description=row.get("description", None),
+        color=row["color"],
+        pile_structure=row["pile_structure"],
+        region=Region(row["region"]),
         uow=uow,
     )
     return pattern

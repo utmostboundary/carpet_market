@@ -12,6 +12,6 @@ class PatternFactory(Protocol):
         title: str,
         color: str,
         pile_structure: str,
-        region: Region,
+        region: str,
         description: str | None = None,
     ) -> Pattern: ...

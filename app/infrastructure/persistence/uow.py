@@ -30,15 +30,24 @@ class UnitOfWorkImpl(UnitOfWork):
 
     async def _flush(self) -> None:
         for entity_type, data in self._new.items():
-            mapper = self._registry.get(entity_type=entity_type)
+            mapper = self._registry.get(
+                self._connection,
+                entity_type=entity_type,
+            )
             await mapper.save(entities=data)
 
         for entity_type, data in self._dirty.items():
-            mapper = self._registry.get(entity_type=entity_type)
+            mapper = self._registry.get(
+                self._connection,
+                entity_type=entity_type,
+            )
             await mapper.update(entities=data)
 
         for entity_type, data in self._deleted.items():
-            mapper = self._registry.get(entity_type=entity_type)
+            mapper = self._registry.get(
+                self._connection,
+                entity_type=entity_type,
+            )
             await mapper.delete(entities=data)
 
     async def commit(self) -> None:

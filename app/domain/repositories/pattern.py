@@ -16,6 +16,6 @@ class PatternRepository(Protocol):
         self,
         color: str,
         pile_structure: str,
-        region: Region,
+        region: str,
     ) -> Pattern | None:
         raise NotImplementedError

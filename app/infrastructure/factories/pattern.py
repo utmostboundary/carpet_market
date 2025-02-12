@@ -20,7 +20,7 @@ class PatternFactoryImpl(PatternFactory):
         title: str,
         color: str,
         pile_structure: str,
-        region: Region,
+        region: str,
         description: str | None = None,
     ) -> Pattern:
         if await self._repository.with_all_attributes(
@@ -35,7 +35,7 @@ class PatternFactoryImpl(PatternFactory):
             description=description,
             color=color,
             pile_structure=pile_structure,
-            region=region,
+            region=Region(region),
         )
         new_pattern.mark_new()
         return new_pattern

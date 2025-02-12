@@ -1,3 +1,5 @@
+from typing import Any
+
 from app.domain.models.base import DomainEntity
 from app.domain.models.carpet import Carpet
 from app.domain.models.pattern import Pattern
@@ -10,23 +12,45 @@ class Registry:
 
     def __init__(self):
         self._mappers = {}
-        self._keys = {
-            Pattern: PatternMapperSAImpl,
-            Carpet: CarpetMapperSAImpl,
-        }
 
-    def add_mapper(self, mapper: GenericDataMapper[DomainEntity]):
-        self._mappers[type(mapper)] = mapper
+    def add_mapper(
+        self,
+        entity_type: type[DomainEntity],
+        mapper_type: type[GenericDataMapper[DomainEntity]],
+    ):
+        self._mappers[entity_type] = mapper_type
 
     def get[
         EntityT: DomainEntity
-    ](self, entity_type: EntityT) -> GenericDataMapper[DomainEntity]:
-        try:
-            key = self._keys[entity_type]
-        except KeyError as e:
-            raise Exception("The mapper for this entity is not registered") from e
-        try:
-            mapper = self._mappers[key]
-        except KeyError as e:
-            raise Exception("The mapper is not initialized") from e
-        return mapper
+    ](
+        self,
+        *args: Any,
+        entity_type: EntityT,
+        **kwargs: Any,
+    ) -> GenericDataMapper[
+        DomainEntity
+    ]:
+        requested_mapper = self._mappers.get(entity_type)
+        return self._override_mapper(*args, mapper=requested_mapper, **kwargs)
+
+    def _override_mapper[
+        TEntity: DomainEntity
+    ](
+        self,
+        *args: Any,
+        mapper: type[GenericDataMapper[TEntity]],
+        **kwargs: Any,
+    ) -> GenericDataMapper[TEntity]:
+        overrode_mapper = mapper(*args, **kwargs)
+        return overrode_mapper
+
+
+def setup_data_mappers(registry: Registry) -> None:
+    registry.add_mapper(
+        entity_type=Pattern,
+        mapper_type=PatternMapperSAImpl,
+    )
+    registry.add_mapper(
+        entity_type=Carpet,
+        mapper_type=CarpetMapperSAImpl,
+    )

@@ -1,3 +1,4 @@
+from typing import Optional
 from uuid import UUID
 
 from sqlalchemy import select, RowMapping
@@ -13,7 +14,9 @@ class PatternGatewaySAImpl(PatternGateway):
     def __init__(self, connection: AsyncConnection):
         self._connection = connection
 
-    def _load_pattern_dto(self, row: RowMapping) -> PatternDTO:
+    def _load_pattern_dto(self, row: Optional[RowMapping]) -> PatternDTO | None:
+        if not row:
+            return None
         return PatternDTO(
             id=row.id,
             description=row.description,

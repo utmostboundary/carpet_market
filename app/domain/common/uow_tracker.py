@@ -8,13 +8,13 @@ if TYPE_CHECKING:
 class UoWTracker(Protocol):
 
     @abstractmethod
-    def register_new(self, entity: "DomainEntity"):
+    def register_new(self, entity: "DomainEntity") -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def register_dirty(self, entity: "DomainEntity"):
+    def register_dirty(self, entity: "DomainEntity") -> None:
         raise NotImplementedError
 
     @abstractmethod
-    def register_deleted(self, entity: "DomainEntity"):
+    def register_deleted(self, entity: "DomainEntity") -> None:
         raise NotImplementedError

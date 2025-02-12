@@ -21,6 +21,7 @@ class PatternMapperSAImpl(GenericDataMapper[Pattern]):
                 "title": entity.title,
                 "color": entity.color,
                 "pile_structure": entity.pile_structure,
+                "region": entity.region.value,
             }
             for entity in entities
         ]
@@ -35,6 +36,7 @@ class PatternMapperSAImpl(GenericDataMapper[Pattern]):
                 "description": entity.description,
                 "color": entity.color,
                 "pile_structure": entity.pile_structure,
+                "region": entity.region.value,
             }
             for entity in entities
         ]

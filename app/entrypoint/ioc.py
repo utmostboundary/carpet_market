@@ -9,6 +9,7 @@ from dishka import (
     from_context,
     AnyOf,
 )
+from dishka.integrations.aiogram import AiogramProvider
 from dishka.integrations.fastapi import FastapiProvider
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncConnection
 from fastapi.requests import Request
@@ -31,7 +32,7 @@ from app.infrastructure.persistence.data_mappers.carpet import CarpetMapperSAImp
 from app.infrastructure.persistence.data_mappers.generic import GenericDataMapper
 from app.infrastructure.persistence.data_mappers.pattern import PatternMapperSAImpl
 from app.infrastructure.persistence.gateways.pattern import PatternGatewaySAImpl
-from app.infrastructure.persistence.registry import Registry
+from app.infrastructure.persistence.registry import Registry, setup_data_mappers
 from app.infrastructure.persistence.repositories.carpet import CarpetRepositorySAImpl
 from app.infrastructure.persistence.repositories.pattern import PatternRepositorySAImpl
 from app.infrastructure.persistence.uow import UnitOfWorkImpl
@@ -68,16 +69,7 @@ class DatabaseProvider(Provider):
 
 class PersistenceProvider(Provider):
 
-    @provide(scope=Scope.REQUEST)
-    async def provide_registry(
-        self,
-        carpet_mapper: GenericDataMapper[Carpet],
-        pattern_mapper: GenericDataMapper[Pattern],
-    ) -> Registry:
-        registry = Registry()
-        registry.add_mapper(mapper=carpet_mapper)
-        registry.add_mapper(mapper=pattern_mapper)
-        return registry
+    registry = from_context(Registry, scope=Scope.APP)
 
     uow = provide(
         UnitOfWorkImpl,
@@ -87,20 +79,6 @@ class PersistenceProvider(Provider):
             UoWCommitter,
             UnitOfWork,
         ],
-    )
-
-
-class DataMappersProvider(Provider):
-
-    pattern_mapper = provide(
-        PatternMapperSAImpl,
-        scope=Scope.REQUEST,
-        provides=GenericDataMapper[Pattern],
-    )
-    carpet_mapper = provide(
-        CarpetMapperSAImpl,
-        scope=Scope.REQUEST,
-        provides=GenericDataMapper[Carpet],
     )
 
 
@@ -122,18 +100,10 @@ class CommandsProvider(Provider):
 
 class QueriesProvider(Provider):
 
-    @provide(scope=Scope.REQUEST)
-    async def get_pattern_by_id(
-        self, pattern_gateway: PatternGateway
-    ) -> GetPatternById:
-        query_service = GetPatternById(pattern_gateway=pattern_gateway)
-        print(f"=====================QUERY SERVICE ID {id(query_service)}")
-        return query_service
-
-    # get_pattern_by_id = provide(
-    #     GetPatternById,
-    #     scope=Scope.REQUEST,
-    # )
+    get_pattern_by_id = provide(
+        GetPatternById,
+        scope=Scope.REQUEST,
+    )
 
 
 class RepositoriesProvider(Provider):
@@ -183,7 +153,6 @@ def setup_providers() -> list[Provider]:
     providers = [
         DatabaseProvider(),
         PersistenceProvider(),
-        DataMappersProvider(),
         CommandsProvider(),
         QueriesProvider(),
         RepositoriesProvider(),
@@ -193,9 +162,29 @@ def setup_providers() -> list[Provider]:
     return providers
 
 
-def setup_fastapi_di(context: dict) -> AsyncContainer:
+def setup_fastapi_di(
+    context: dict,
+) -> AsyncContainer:
     providers = setup_providers()
     providers.append(FastapiProvider())
+    setup_data_mappers(registry=context.get(Registry))
 
-    container = make_async_container(*providers, context=context)
+    container = make_async_container(
+        *providers,
+        context=context,
+    )
+    return container
+
+
+def setup_aiogram_di(
+    context: dict,
+) -> AsyncContainer:
+    providers = setup_providers()
+    providers.append(AiogramProvider())
+    setup_data_mappers(registry=context.get(Registry))
+
+    container = make_async_container(
+        *providers,
+        context=context,
+    )
     return container

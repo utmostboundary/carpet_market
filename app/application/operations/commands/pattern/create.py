@@ -12,7 +12,7 @@ class CreatePatternCommand:
     description: str | None
     color: str
     pile_structure: str
-    region: Region
+    region: str
 
 
 class CreatePattern:

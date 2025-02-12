@@ -26,13 +26,13 @@ class PatternRepositorySAImpl(PatternRepository):
         ).where(pattern_table.c.id == pattern_id)
 
         result = await self._connection.execute(statement=stmt)
-        return convert_to_pattern_entity(rows=result.mappings().all(), uow=self._uow)
+        return convert_to_pattern_entity(row=result.mappings().first(), uow=self._uow)
 
     async def with_all_attributes(
         self,
         color: str,
         pile_structure: str,
-        region: Region,
+        region: str,
     ) -> Pattern | None:
         stmt = select(
             pattern_table.c.id.label("id"),
@@ -46,4 +46,4 @@ class PatternRepositorySAImpl(PatternRepository):
             pattern_table.c.region == region,
         )
         result = await self._connection.execute(statement=stmt)
-        return convert_to_pattern_entity(rows=result.mappings().all(), uow=self._uow)
+        return convert_to_pattern_entity(row=result.mappings().first(), uow=self._uow)
