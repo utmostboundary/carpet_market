@@ -10,3 +10,11 @@ class InvalidTokenError(DomainError):
     @property
     def message(self) -> str:
         return self.text
+
+
+@dataclass(eq=False)
+class DefaultUserMustHaveTgId(DomainError):
+
+    @property
+    def message(self) -> str:
+        return "User must have Telegram ID"

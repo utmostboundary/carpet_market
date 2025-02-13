@@ -15,6 +15,7 @@ from app.application.operations.queries.pattern.get_by_id import GetPatternById
 from app.domain.exceptions.base import DomainError
 from app.domain.exceptions.pattern import PatternDoesNotExistError
 
+
 router = APIRouter(prefix="/patterns", tags=["Patterns"])
 
 

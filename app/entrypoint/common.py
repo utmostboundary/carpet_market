@@ -1,7 +1,7 @@
 import os
 
-from app.entrypoint.ioc import ConnectionString
 from app.infrastructure.persistence.registry import Registry
+from app.entrypoint.ioc import ConnectionString
 
 
 def get_db_connection_string() -> ConnectionString:

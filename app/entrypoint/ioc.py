@@ -22,21 +22,17 @@ from app.application.operations.commands.pattern.edit import EditPattern
 from app.application.operations.queries.pattern.get_by_id import GetPatternById
 from app.domain.common.uow_tracker import UoWTracker
 from app.domain.factories.pattern import PatternFactory
-from app.domain.models.carpet import Carpet
-from app.domain.models.pattern import Pattern
 from app.domain.repositories.carpet import CarpetRepository
 from app.domain.repositories.pattern import PatternRepository
 from app.infrastructure.auth.auth_token_gettable import AuthTokenGettable
 from app.infrastructure.factories.pattern import PatternFactoryImpl
-from app.infrastructure.persistence.data_mappers.carpet import CarpetMapperSAImpl
-from app.infrastructure.persistence.data_mappers.generic import GenericDataMapper
-from app.infrastructure.persistence.data_mappers.pattern import PatternMapperSAImpl
 from app.infrastructure.persistence.gateways.pattern import PatternGatewaySAImpl
 from app.infrastructure.persistence.registry import Registry, setup_data_mappers
 from app.infrastructure.persistence.repositories.carpet import CarpetRepositorySAImpl
 from app.infrastructure.persistence.repositories.pattern import PatternRepositorySAImpl
 from app.infrastructure.persistence.uow import UnitOfWorkImpl
 from app.presentation.http.auth import FastAPIAuthTokenGettable
+
 
 type ConnectionString = str
 

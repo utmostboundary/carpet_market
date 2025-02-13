@@ -31,18 +31,18 @@ class Registry:
         DomainEntity
     ]:
         requested_mapper = self._mappers.get(entity_type)
-        return self._override_mapper(*args, mapper=requested_mapper, **kwargs)
+        return self._override_mapper(*args, mapper_type=requested_mapper, **kwargs)
 
     def _override_mapper[
         TEntity: DomainEntity
     ](
         self,
         *args: Any,
-        mapper: type[GenericDataMapper[TEntity]],
+        mapper_type: type[GenericDataMapper[TEntity]],
         **kwargs: Any,
     ) -> GenericDataMapper[TEntity]:
-        overrode_mapper = mapper(*args, **kwargs)
-        return overrode_mapper
+        overridden_mapper = mapper_type(*args, **kwargs)
+        return overridden_mapper
 
 
 def setup_data_mappers(registry: Registry) -> None:

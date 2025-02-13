@@ -3,7 +3,6 @@ from uuid import UUID
 
 from app.application.common.uow import UoWCommitter
 from app.domain.factories.pattern import PatternFactory
-from app.domain.models.pattern import Region
 
 
 @dataclass(frozen=True)

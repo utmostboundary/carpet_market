@@ -7,10 +7,9 @@ from aiogram.client.session.aiohttp import AiohttpSession
 from aiogram.enums import ParseMode
 from dishka.integrations.aiogram import setup_dishka
 
-from app.entrypoint.common import get_db_connection_string, provide_context
-from app.entrypoint.ioc import ConnectionString, setup_aiogram_di
-from app.infrastructure.persistence.registry import Registry
-from app.presentation.tg_bot.main import setup_aiogram_routers
+from app.entrypoint.common import provide_context
+from app.entrypoint.ioc import setup_aiogram_di
+from app.presentation.tg_bot.setup import setup_aiogram_routers
 
 
 def get_bot_token() -> str:
