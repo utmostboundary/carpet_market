@@ -1,14 +1,15 @@
 from abc import abstractmethod
 from typing import Protocol
-from uuid import UUID
 
-from app.domain.models.user import Role
+from app.domain.models.user import Role, User
 
 
 class IdentityProvider(Protocol):
 
     @abstractmethod
-    async def user_id(self) -> UUID: ...
+    async def get_user(self) -> User | None:
+        raise NotImplementedError
 
     @abstractmethod
-    async def role(self) -> Role: ...
+    async def get_role(self) -> Role:
+        raise NotImplementedError

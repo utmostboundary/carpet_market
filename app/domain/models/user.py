@@ -4,8 +4,9 @@ from enum import Enum
 from uuid import UUID
 
 from app.domain.common.uow_tracker import UoWTracker
-from app.domain.exceptions.user import DefaultUserMustHaveTgId
+from app.domain.exceptions.user import AdminMustHavePassword
 from app.domain.models.base import UoWedEntity
+from app.domain.value_objects.tg_contacts import TgContacts
 
 
 class Role(Enum):
@@ -15,9 +16,9 @@ class Role(Enum):
 
 @dataclass(kw_only=True)
 class User(UoWedEntity):
-    hashed_password: str
+    tg_contacts: TgContacts | None
+    hashed_password: str | None
     role: Role = field(default=Role.DEFAULT)
-    tg_id: str | None
     phone_number: str | None = None
     is_active: bool = True
 
@@ -25,18 +26,18 @@ class User(UoWedEntity):
     def create(
         cls,
         uow: UoWTracker,
-        hashed_password: str,
-        tg_id: str | None,
+        tg_contacts: TgContacts | None,
+        hashed_password: str | None = None,
         role: Role = Role.DEFAULT,
         phone_number: str | None = None,
         is_active: bool = True,
     ) -> "User":
-        if role != Role.ADMIN and not tg_id:
-            raise DefaultUserMustHaveTgId()
+        if role == Role.ADMIN and not hashed_password:
+            raise AdminMustHavePassword()
         new_user = cls(
             uow=uow,
+            tg_contacts=tg_contacts,
             hashed_password=hashed_password,
-            tg_id=tg_id,
             role=role,
             phone_number=phone_number,
             is_active=is_active,

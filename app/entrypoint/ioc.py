@@ -1,5 +1,6 @@
 from typing import AsyncIterable, AsyncGenerator
 
+from aiogram.types import TelegramObject
 from dishka import (
     Provider,
     Scope,
@@ -134,7 +135,7 @@ class FactoriesProvider(Provider):
     )
 
 
-class AuthProvider(Provider):
+class HttpAuthProvider(Provider):
 
     request = from_context(Request, scope=Scope.REQUEST)
 
@@ -143,6 +144,10 @@ class AuthProvider(Provider):
         scope=Scope.REQUEST,
         provides=AuthTokenGettable,
     )
+
+
+class TgAuthProvider(Provider):
+    tg_object = from_context(provides=TelegramObject, scope=Scope.REQUEST)
 
 
 def setup_providers() -> list[Provider]:
@@ -163,6 +168,7 @@ def setup_fastapi_di(
 ) -> AsyncContainer:
     providers = setup_providers()
     providers.append(FastapiProvider())
+    providers.append(HttpAuthProvider())
     setup_data_mappers(registry=context.get(Registry))
 
     container = make_async_container(

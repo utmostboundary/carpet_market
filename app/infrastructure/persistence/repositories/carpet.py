@@ -32,5 +32,6 @@ class CarpetRepositorySAImpl(CarpetRepository):
 
         result = await self._connection.execute(statement=stmt)
         return convert_to_many_carpet_entities(
-            rows=result.mappings().all(), uow=self._uow
+            rows=result.mappings().all(),
+            uow=self._uow,
         )

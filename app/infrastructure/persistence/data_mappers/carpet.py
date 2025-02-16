@@ -21,9 +21,9 @@ class CarpetMapperSAImpl(GenericDataMapper[Carpet]):
                 "title": entity.title,
                 "width": entity.size.width,
                 "height": entity.size.height,
-                "base_price": entity.base_price,
-                "retail_price": entity.retail_price,
-                "stock_amount": entity.stock_amount,
+                "base_price": entity.base_price.value,
+                "retail_price": entity.retail_price.value,
+                "stock_amount": entity.stock_amount.value,
                 "main_image_path": entity.main_image_path,
             }
             for entity in entities
@@ -39,9 +39,9 @@ class CarpetMapperSAImpl(GenericDataMapper[Carpet]):
                 "description": entity.description,
                 "width": entity.size.width,
                 "height": entity.size.height,
-                "base_price": entity.base_price,
-                "retail_price": entity.retail_price,
-                "stock_amount": entity.stock_amount,
+                "base_price": entity.base_price.value,
+                "retail_price": entity.retail_price.value,
+                "stock_amount": entity.stock_amount.value,
                 "main_image_path": entity.main_image_path,
             }
             for entity in entities

@@ -13,8 +13,16 @@ class InvalidTokenError(DomainError):
 
 
 @dataclass(eq=False)
-class DefaultUserMustHaveTgId(DomainError):
+class AdminMustHavePassword(DomainError):
 
     @property
     def message(self) -> str:
-        return "User must have Telegram ID"
+        return "Admin must have password"
+
+
+@dataclass(eq=False)
+class UserDoesNotExist(DomainError):
+
+    @property
+    def message(self) -> str:
+        return "User does not exist"
