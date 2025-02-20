@@ -12,11 +12,20 @@ from app.application.operations.commands.pattern.edit import (
     EditPattern,
 )
 from app.application.operations.queries.pattern.get_by_id import GetPatternById
+from app.application.operations.queries.pattern.get_colors import GetColors
+from app.application.view_models.pattern import ColorDTO
 from app.domain.exceptions.base import DomainError
 from app.domain.exceptions.pattern import PatternDoesNotExistError
 
 
 router = APIRouter(prefix="/patterns", tags=["Patterns"])
+
+
+@router.get("/colors/", response_model=list[ColorDTO])
+@inject
+async def get_colors(handler: FromDishka[GetColors]):
+    colors = await handler.execute()
+    return colors
 
 
 @router.get("/{pattern_id}/")

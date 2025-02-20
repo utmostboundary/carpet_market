@@ -10,28 +10,33 @@ from dishka import (
     from_context,
     AnyOf,
 )
-from dishka.integrations.aiogram import AiogramProvider
 from dishka.integrations.fastapi import FastapiProvider
 from sqlalchemy.ext.asyncio import AsyncEngine, create_async_engine, AsyncConnection
 from fastapi.requests import Request
 
+from app.application.common.file_converter import FileCompressor
+from app.application.gateways.carpet import CarpetGateway
 from app.application.gateways.pattern import PatternGateway
 from app.application.operations.commands.carpet.add_carpet import AddCarpet
 from app.application.operations.commands.pattern.create import CreatePattern
 from app.application.common.uow import UoWCommitter, UnitOfWork
 from app.application.operations.commands.pattern.edit import EditPattern
+from app.application.operations.queries.carpet.get_many import GetCarpets
 from app.application.operations.queries.pattern.get_by_id import GetPatternById
+from app.application.operations.queries.pattern.get_colors import GetColors
 from app.domain.common.uow_tracker import UoWTracker
 from app.domain.factories.pattern import PatternFactory
 from app.domain.repositories.carpet import CarpetRepository
 from app.domain.repositories.pattern import PatternRepository
 from app.infrastructure.auth.auth_token_gettable import AuthTokenGettable
 from app.infrastructure.factories.pattern import PatternFactoryImpl
+from app.infrastructure.persistence.gateways.carpet import CarpetGatewaySAImpl
 from app.infrastructure.persistence.gateways.pattern import PatternGatewaySAImpl
 from app.infrastructure.persistence.registry import Registry, setup_data_mappers
 from app.infrastructure.persistence.repositories.carpet import CarpetRepositorySAImpl
 from app.infrastructure.persistence.repositories.pattern import PatternRepositorySAImpl
 from app.infrastructure.persistence.uow import UnitOfWorkImpl
+from app.infrastructure.webp_compressor import WebpFileCompressor
 from app.presentation.http.auth import FastAPIAuthTokenGettable
 
 
@@ -79,6 +84,14 @@ class PersistenceProvider(Provider):
     )
 
 
+class InfrastructureProvider(Provider):
+    webp_compressor = provide(
+        WebpFileCompressor,
+        scope=Scope.REQUEST,
+        provides=FileCompressor,
+    )
+
+
 class CommandsProvider(Provider):
 
     create_pattern = provide(
@@ -99,6 +112,14 @@ class QueriesProvider(Provider):
 
     get_pattern_by_id = provide(
         GetPatternById,
+        scope=Scope.REQUEST,
+    )
+    get_carpets = provide(
+        GetCarpets,
+        scope=Scope.REQUEST,
+    )
+    get_colors = provide(
+        GetColors,
         scope=Scope.REQUEST,
     )
 
@@ -123,6 +144,11 @@ class GatewaysProvider(Provider):
         PatternGatewaySAImpl,
         scope=Scope.REQUEST,
         provides=PatternGateway,
+    )
+    carpet_gateway = provide(
+        CarpetGatewaySAImpl,
+        scope=Scope.REQUEST,
+        provides=CarpetGateway,
     )
 
 
@@ -182,7 +208,6 @@ def setup_aiogram_di(
     context: dict,
 ) -> AsyncContainer:
     providers = setup_providers()
-    providers.append(AiogramProvider())
     setup_data_mappers(registry=context.get(Registry))
 
     container = make_async_container(

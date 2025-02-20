@@ -20,6 +20,6 @@ class Price(BaseValueObject):
             )
 
     def __eq__(self, other: "Price") -> bool:
-        if self.value == other.value:
+        if isinstance(other, Price) and self.value == other.value:
             return True
         return False

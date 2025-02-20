@@ -1,10 +1,9 @@
 from dataclasses import dataclass
 
 from app.application.auth.identity_provider import IdentityProvider
-from app.application.common.uow import UnitOfWork, UoWCommitter
+from app.application.common.uow import UnitOfWork
 from app.application.common.view_manager import ViewManager
 from app.domain.models.user import User
-from app.domain.repositories.user import UserRepository
 from app.domain.value_objects.tg_contacts import TgContacts
 
 

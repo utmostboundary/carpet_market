@@ -27,9 +27,9 @@ class CreatePattern:
     async def execute(self, command: CreatePatternCommand) -> UUID:
         pattern = await self._pattern_factory.create(
             title=command.title,
-            color=command.color,
-            pile_structure=command.pile_structure,
-            region=command.region,
+            color=command.color.strip(),
+            pile_structure=command.pile_structure.strip(),
+            region=command.region.strip(),
             description=command.description,
         )
         await self._committer.commit()

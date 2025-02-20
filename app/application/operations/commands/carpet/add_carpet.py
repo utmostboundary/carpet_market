@@ -57,7 +57,7 @@ class AddCarpet:
         )
         new_carpet = pattern.add_carpet(
             pattern_carpets=pattern_carpets,
-            title=command.title,
+            title=command.title.strip(),
             description=command.description,
             size=size,
             base_price=base_price,

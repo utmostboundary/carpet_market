@@ -23,7 +23,7 @@ class UnitOfWorkImpl(UnitOfWork):
         self._new.setdefault(type(entity), []).append(entity)
 
     def register_dirty(self, entity: DomainEntity) -> None:
-        self._dirty.setdefault(type(entity), []).append(entity)
+        self._dirty.setdefault(type(entity), set()).add(entity)
 
     def register_deleted(self, entity: DomainEntity) -> None:
         self._deleted.setdefault(type(entity), []).append(entity)

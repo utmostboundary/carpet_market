@@ -13,6 +13,10 @@ class Region(Enum):
     CHINA = "CHINA"
     TIBET = "TIBET"
 
+    def ru_label(self):
+        ru_labels = {self.CHINA: "Китай", self.TIBET: "Тибет"}
+        return ru_labels[self]
+
 
 @dataclass
 class Pattern(UoWedEntity):

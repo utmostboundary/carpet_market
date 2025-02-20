@@ -1,7 +1,7 @@
 from uuid import UUID
 
 from app.application.gateways.pattern import PatternGateway
-from app.application.common.view_models import PatternDTO
+from app.application.view_models.pattern import PatternDTO
 from app.domain.exceptions.pattern import PatternDoesNotExistError
 
 

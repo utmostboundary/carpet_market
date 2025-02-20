@@ -10,3 +10,11 @@ class CarpetWithThisSizeAlreadyExistsError(DomainError):
     @property
     def message(self) -> str:
         return self.text
+
+
+@dataclass(eq=False)
+class RetailPriceCannotBeLesserThanBasePrice(DomainError):
+
+    @property
+    def message(self) -> str:
+        return "Retail price cannot be lesser than base price"
