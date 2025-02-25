@@ -6,7 +6,7 @@ from fastapi.responses import ORJSONResponse
 
 from app.entrypoint.common import provide_context
 from app.entrypoint.ioc import setup_fastapi_di
-from app.presentation.http.main import setup_routers
+from app.presentation.http.setup import setup_routers
 
 
 @asynccontextmanager

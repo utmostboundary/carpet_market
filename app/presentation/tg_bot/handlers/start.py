@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.filters import CommandStart
 from aiogram.types import CallbackQuery, Message, User
 from aiogram_dialog import DialogManager, Dialog, Window, StartMode
-from aiogram_dialog.widgets.kbd import Select, Button
+from aiogram_dialog.widgets.kbd import Button
 from aiogram_dialog.widgets.text import Const, Format
 from dishka import FromDishka
 from dishka.integrations.aiogram_dialog import inject
